@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gouda's Pharma — Medical E-Commerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #060e1e;
+    --navy2: #0d1b34;
+    --navy3: #132244;
+    --teal: #00c9a7;
+    --teal2: #00e8c0;
+    --mint: #d4f7f0;
+    --white: #f0f4ff;
+    --gray: #8899bb;
+    --border: rgba(0,201,167,0.15);
+    --card: rgba(13,27,52,0.7);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS BG ── */
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(6,14,30,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), #0080ff);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; color: #fff;
+  }
+  .nav-logo-text { font-family: 'Fraunces', serif; font-weight: 600; font-size: 17px; color: var(--white); letter-spacing: -0.3px; }
+  .nav-logo-sub { font-size: 10px; color: var(--teal); letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: -2px; }
+
+  .nav-links { display: flex; align-items: center; gap: 0; }
+  .nav-group { position: relative; }
+  .nav-group > a, .nav-item {
+    display: flex; align-items: center; gap: 4px;
+    padding: 0 14px; height: 64px;
+    font-size: 13.5px; color: rgba(240,244,255,0.75);
+    text-decoration: none; cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .nav-group:hover > a, .nav-group:hover .nav-item { color: var(--teal); }
+  .nav-caret { font-size: 9px; opacity: 0.6; transition: transform 0.2s; }
+  .nav-group:hover .nav-caret { transform: rotate(180deg); }
+
+  .nav-dropdown {
+    display: none; position: absolute; top: 100%; left: 0;
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 8px 0; min-width: 180px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .nav-group:hover .nav-dropdown { display: block; animation: fadein 0.15s ease; }
+  .nav-dropdown a {
+    display: block; padding: 9px 18px;
+    font-size: 13px; color: rgba(240,244,255,0.7);
+    text-decoration: none; transition: all 0.15s;
+  }
+  .nav-dropdown a:hover { color: var(--teal); background: rgba(0,201,167,0.06); padding-left: 22px; }
+
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .btn-ghost {
+    padding: 7px 16px; font-size: 13.5px; border-radius: 8px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--white); cursor: pointer; transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-teal {
+    padding: 7px 18px; font-size: 13.5px; border-radius: 8px;
+    background: var(--teal); border: none;
+    color: var(--navy); cursor: pointer; font-weight: 600;
+    transition: all 0.2s; font-family: 'Outfit', sans-serif;
+  }
+  .btn-teal:hover { background: var(--teal2); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    padding: 120px 2rem 100px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    min-height: 90vh; justify-content: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.3);
+    font-size: 12px; color: var(--teal); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 28px;
+    animation: fadein 0.6s ease both;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 700;
+    font-size: clamp(44px, 7vw, 84px); line-height: 1.07;
+    letter-spacing: -2px; max-width: 900px;
+    animation: slideup 0.7s 0.1s ease both;
+  }
+  .hero h1 em { font-style: italic; font-weight: 300; color: var(--teal); }
+  .hero-sub {
+    max-width: 580px; margin: 24px auto 40px;
+    font-size: 17px; line-height: 1.7; color: var(--gray);
+    animation: slideup 0.7s 0.2s ease both;
+  }
+  .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: slideup 0.7s 0.3s ease both; }
+  .btn-primary {
+    padding: 14px 32px; font-size: 15px; border-radius: 10px;
+    background: var(--teal); border: none; color: var(--navy);
+    font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif;
+    transition: all 0.25s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--teal2); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,201,167,0.3); }
+  .btn-secondary {
+    padding: 14px 32px; font-size: 15px; border-radius: 10px;
+    background: transparent; border: 1px solid rgba(240,244,255,0.2); color: var(--white);
+    font-weight: 400; cursor: pointer; font-family: 'Outfit', sans-serif;
+    transition: all 0.25s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex; gap: 60px; margin-top: 80px;
+    animation: slideup 0.7s 0.4s ease both;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 600; color: var(--white); }
+  .stat-label { font-size: 12.5px; color: var(--gray); margin-top: 2px; letter-spacing: 0.5px; }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 28px 2rem;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    overflow: hidden;
+  }
+  .trust-label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1.5px; white-space: nowrap; }
+  .trust-sep { width: 1px; height: 20px; background: var(--border); }
+  .trust-scroll { display: flex; gap: 48px; overflow: hidden; flex: 1; max-width: 700px; }
+  .trust-track { display: flex; gap: 48px; animation: scroll 18s linear infinite; white-space: nowrap; }
+  .trust-logo { font-size: 13px; color: rgba(240,244,255,0.4); font-weight: 500; letter-spacing: 0.5px; }
+  @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+  .section-header { text-align: center; margin-bottom: 60px; }
+  .section-tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif; font-size: clamp(32px, 4vw, 48px);
+    font-weight: 600; letter-spacing: -1px; line-height: 1.15;
+  }
+  .section-sub { font-size: 16px; color: var(--gray); max-width: 500px; margin: 14px auto 0; line-height: 1.7; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+  .py { padding: 100px 0; }
+
+  /* ── FEATURES ── */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .feature-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px 28px;
+    transition: all 0.3s; cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at top left, rgba(0,201,167,0.06), transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(0,201,167,0.4); transform: translateY(-4px); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 20px;
+  }
+  .feature-title { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .feature-text { font-size: 14px; color: var(--gray); line-height: 1.7; }
+  .feature-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 13px; color: var(--teal); text-decoration: none; transition: gap 0.2s; }
+  .feature-link:hover { gap: 10px; }
+
+  /* ── INSIGHTS ── */
+  .insights-wrap {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center;
+  }
+  .insights-visual {
+    position: relative; height: 420px;
+  }
+  .insight-chart {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px; height: 100%;
+  }
+  .chart-title { font-size: 13px; color: var(--gray); margin-bottom: 24px; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 12px; height: 200px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bar {
+    width: 100%; border-radius: 6px 6px 0 0;
+    background: rgba(0,201,167,0.2); border: 1px solid rgba(0,201,167,0.3);
+    position: relative; transition: height 0.8s cubic-bezier(.34,1.56,.64,1);
+  }
+  .bar.active { background: linear-gradient(to top, rgba(0,201,167,0.8), rgba(0,201,167,0.3)); border-color: var(--teal); }
+  .bar-label { font-size: 11px; color: var(--gray); text-align: center; }
+  .chart-meta {
+    margin-top: 20px; display: flex; gap: 24px;
+  }
+  .meta-item { }
+  .meta-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; color: var(--teal); }
+  .meta-label { font-size: 12px; color: var(--gray); }
+
+  .floating-card {
+    position: absolute; right: -20px; top: 30px;
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 20px; width: 200px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .fc-label { font-size: 11px; color: var(--gray); margin-bottom: 6px; }
+  .fc-val { font-family: 'Fraunces', serif; font-size: 24px; color: var(--teal); }
+  .fc-trend { font-size: 12px; color: #34d399; margin-top: 4px; }
+
+  .insights-text h2 { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; margin-bottom: 20px; }
+  .insights-text p { font-size: 15px; color: var(--gray); line-height: 1.8; margin-bottom: 16px; }
+  .insight-points { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .insight-points li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14px; color: rgba(240,244,255,0.8); line-height: 1.6;
+  }
+  .ip-dot { width: 20px; height: 20px; border-radius: 50%; background: rgba(0,201,167,0.15); border: 1px solid rgba(0,201,167,0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 10px; color: var(--teal); }
+
+  /* ── INTEGRATIONS ── */
+  .integrations-bg { background: var(--navy2); }
+  .int-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 50px; }
+  .int-card {
+    background: rgba(6,14,30,0.6); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    text-align: center; transition: all 0.25s;
+  }
+  .int-card:hover { border-color: rgba(0,201,167,0.5); transform: translateY(-3px); }
+  .int-icon { font-size: 28px; }
+  .int-name { font-size: 14px; font-weight: 500; }
+  .int-desc { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  /* ── PRICING ── */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
+  .price-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 36px 32px; position: relative; overflow: hidden;
+  }
+  .price-card.featured {
+    border-color: var(--teal); background: rgba(0,201,167,0.05);
+  }
+  .price-card.featured::before {
+    content: 'Most Popular';
+    position: absolute; top: 0; right: 0;
+    background: var(--teal); color: var(--navy); font-size: 11px; font-weight: 700;
+    padding: 6px 16px; border-radius: 0 20px 0 12px; letter-spacing: 0.5px;
+  }
+  .price-plan { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--teal); margin-bottom: 12px; }
+  .price-amount { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; line-height: 1; }
+  .price-period { font-size: 13px; color: var(--gray); margin-bottom: 8px; }
+  .price-desc { font-size: 13px; color: var(--gray); margin-bottom: 28px; line-height: 1.6; }
+  .price-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .price-features li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: rgba(240,244,255,0.8); }
+  .pf-check { color: var(--teal); font-size: 15px; flex-shrink: 0; }
+  .btn-plan {
+    width: 100%; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    font-family: 'Outfit', sans-serif; cursor: pointer; transition: all 0.25s;
+  }
+  .btn-plan-outline {
+    background: transparent; border: 1px solid rgba(240,244,255,0.2); color: var(--white);
+  }
+  .btn-plan-outline:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-plan-filled { background: var(--teal); border: none; color: var(--navy); }
+  .btn-plan-filled:hover { background: var(--teal2); transform: translateY(-1px); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-bg { background: var(--navy2); }
+  .testimonial-track-wrap { overflow: hidden; }
+  .testimonial-track { display: flex; gap: 20px; transition: transform 0.5s cubic-bezier(.25,.46,.45,.94); }
+  .testimonial-card {
+    min-width: 340px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; padding: 28px; flex-shrink: 0;
+  }
+  .t-stars { color: var(--teal); font-size: 15px; margin-bottom: 16px; letter-spacing: 2px; }
+  .t-quote { font-size: 14.5px; line-height: 1.75; color: rgba(240,244,255,0.85); margin-bottom: 20px; font-style: italic; }
+  .t-author { display: flex; align-items: center; gap: 12px; }
+  .t-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), #0080ff);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: var(--navy);
+  }
+  .t-name { font-size: 14px; font-weight: 600; }
+  .t-role { font-size: 12px; color: var(--gray); }
+  .testimonial-controls { display: flex; gap: 10px; justify-content: center; margin-top: 30px; }
+  .t-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s; border: none; }
+  .t-dot.active { background: var(--teal); width: 24px; border-radius: 4px; }
+
+  /* ── CTA ── */
+  .cta-box {
+    background: linear-gradient(135deg, rgba(0,201,167,0.15), rgba(0,128,255,0.1));
+    border: 1px solid rgba(0,201,167,0.25); border-radius: 24px;
+    padding: 80px 60px; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-box::before {
+    content: ''; position: absolute; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,201,167,0.15), transparent 70%);
+    top: -100px; right: -100px; pointer-events: none;
+  }
+  .cta-box h2 { font-family: 'Fraunces', serif; font-size: 46px; font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; }
+  .cta-box p { font-size: 16px; color: var(--gray); max-width: 480px; margin: 0 auto 36px; line-height: 1.7; }
+  .cta-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cta-input {
+    padding: 13px 20px; border-radius: 10px; font-size: 14px;
+    background: rgba(240,244,255,0.07); border: 1px solid rgba(240,244,255,0.15);
+    color: var(--white); font-family: 'Outfit', sans-serif;
+    outline: none; min-width: 260px; transition: border 0.2s;
+  }
+  .cta-input:focus { border-color: var(--teal); }
+  .cta-input::placeholder { color: var(--gray); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 60px 0 40px;
+  }
+  .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 40px; margin-bottom: 60px; }
+  .footer-brand p { font-size: 13.5px; color: var(--gray); line-height: 1.7; margin-top: 14px; max-width: 240px; }
+  .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+  .social-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(240,244,255,0.05); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray); font-size: 14px; text-decoration: none;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .social-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .footer-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 13.5px; color: var(--gray); text-decoration: none; padding: 5px 0; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 12.5px; color: var(--gray); }
+  .footer-badges { display: flex; gap: 12px; }
+  .badge-pill {
+    padding: 4px 12px; border-radius: 100px; font-size: 11px;
+    background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.25); color: var(--teal);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideup { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    .nav-links, .nav-right .btn-ghost { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .insights-wrap { grid-template-columns: 1fr; }
+    .int-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 30px; }
+    .cta-box { padding: 50px 24px; }
+    .cta-box h2 { font-size: 32px; }
+  }
+</style>
+
+<style>
+.gouda-logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#123b2b}
+.gouda-logo-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+background:linear-gradient(145deg,#2fb878,#147653);box-shadow:0 8px 20px rgba(20,118,83,.22);
+position:relative;overflow:hidden}
+.gouda-logo-mark:before,.gouda-logo-mark:after{content:"";position:absolute;background:#fff;border-radius:5px}
+.gouda-logo-mark:before{width:22px;height:7px}.gouda-logo-mark:after{height:22px;width:7px}
+.gouda-logo-word{font-weight:800;letter-spacing:-.04em;font-size:20px}
+.gouda-logo-sub{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5e756b;font-weight:700;margin-top:1px}
+.brand-chip{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:#315b49;
+background:#edf8f2;border:1px solid #d7eee2;border-radius:999px;padding:6px 9px}
+.brand-dot{width:7px;height:7px;border-radius:50%;background:#2fb878;box-shadow:0 0 0 4px rgba(47,184,120,.12)}
+.product-brand{display:flex;align-items:center;gap:7px;margin:9px 0 0;font-size:11px;color:#587067;font-weight:700}
+.brand-mini{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:#e8f7ef;color:#167654;font-size:11px;font-weight:900}
+</style>
+
+<style id="catalog-branding">
+.catalog-brand{display:flex;align-items:center;gap:8px;margin:9px 0 5px;font-size:11px;font-weight:800;color:#315b49}
+.catalog-brand-logo{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#2fb878,#147653);color:#fff;font-size:9px;font-weight:900;box-shadow:0 6px 14px rgba(20,118,83,.18)}
+.catalog-form{font-size:10px;color:#75847d;margin-bottom:7px}
+.catalog-safety{font-size:10px;color:#65756e;line-height:1.45;margin-top:8px}
+</style>
+<style id="supabase-status-style">
+#supabaseStatus{position:fixed;right:18px;bottom:18px;z-index:9999;padding:8px 11px;border-radius:999px;
+font:700 11px system-ui,sans-serif;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+box-shadow:0 8px 26px rgba(0,0,0,.12);color:#315b49;border:1px solid #dcefe5}
+#supabaseStatus .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2fb878;margin-right:6px}
+</style>
+
+
+<style id="gouda-performance">
+button,.navbtn,[data-add],[data-view],[data-product]{touch-action:manipulation}
+.product{will-change:transform}
+#goudaLoading{display:none!important}
+.gouda-busy{opacity:.72;pointer-events:none}
+</style>
+
+</head>
+<style>
+:root{--ink:#10241d;--muted:#64736d;--line:#dce8e2;--cream:#f5f8f5;--card:#fff;--brand:#176b4d;--brand2:#0d5039;--accent:#d9f2e6;--danger:#b33a3a;--shadow:0 18px 50px rgba(16,36,29,.10)}
+body{background:var(--cream);color:var(--ink);font-family:Outfit,system-ui,sans-serif}.shop{min-height:100vh}.topbar{background:#0f3025;color:#dff3e9;text-align:center;padding:9px;font-size:13px}.nav{position:sticky;top:0;z-index:50;background:rgba(245,248,245,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.navin{max-width:1240px;margin:auto;display:flex;align-items:center;gap:22px;padding:16px 22px}.logo{font:700 26px Fraunces,serif;white-space:nowrap}.logo span{color:var(--brand)}.search{flex:1;position:relative}.search input{width:100%;box-sizing:border-box;padding:14px 18px 14px 46px;border:1px solid var(--line);border-radius:14px;background:white;font:inherit;outline:none}.search input:focus{border-color:#8cc5ab;box-shadow:0 0 0 4px rgba(23,107,77,.08)}.search i{position:absolute;left:17px;top:14px;color:var(--muted)}.navbtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;cursor:pointer}.cartbtn{position:relative}.badge{position:absolute;right:-6px;top:-7px;background:#d75b43;color:white;border-radius:99px;min-width:20px;height:20px;font-size:11px;display:grid;place-items:center}.cats{max-width:1240px;margin:auto;display:flex;gap:25px;padding:12px 22px;overflow:auto}.cats a{color:#41534b;text-decoration:none;white-space:nowrap;font-size:14px}.hero{max-width:1240px;margin:28px auto;padding:0 22px}.heroCard{background:linear-gradient(120deg,#e0f4e9,#f7eee0);border:1px solid var(--line);border-radius:30px;padding:58px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;overflow:hidden;position:relative}.heroCard:after{content:'';position:absolute;width:360px;height:360px;border-radius:50%;background:rgba(23,107,77,.12);right:-100px;top:-110px;animation:float 7s ease-in-out infinite}.eyebrow{color:var(--brand);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:12px}.hero h1{font:600 clamp(42px,6vw,72px)/.98 Fraunces,serif;margin:13px 0 18px;max-width:700px}.hero p{color:#56675f;max-width:580px;font-size:18px;line-height:1.65}.heroSearch{display:flex;gap:10px;margin-top:28px;max-width:610px}.heroSearch input{flex:1;border:1px solid var(--line);padding:15px 17px;border-radius:13px;font:inherit}.primary{background:var(--brand);color:white;border:0;border-radius:13px;padding:14px 20px;font-weight:600;cursor:pointer}.primary:hover{background:var(--brand2);transform:translateY(-2px)}.heroArt{display:grid;place-items:center;min-height:280px;position:relative;z-index:1}.medicalOrb{width:220px;height:220px;border-radius:48px;background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;font-size:82px;animation:float 5s ease-in-out infinite}.wrap{max-width:1240px;margin:0 auto;padding:10px 22px 70px}.section{margin-top:44px}.sectionHead{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.section h2{font:600 32px Fraunces,serif}.sectionHead a{color:var(--brand);font-size:14px}.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}.cat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 12px;text-align:center;cursor:pointer;transition:.25s}.cat:hover{transform:translateY(-5px);box-shadow:var(--shadow)}.cat .emoji{font-size:34px;display:block;margin-bottom:10px}.cat b{font-size:14px}.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 13px}.products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.product{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.28s;opacity:0;transform:translateY(20px)}.product.visible{opacity:1;transform:none}.product:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.pic{height:220px;background:linear-gradient(145deg,#f7fbf8,#edf5f0);display:grid;place-items:center;font-size:70px;position:relative;overflow:hidden}.pic img{width:100%;height:100%;object-fit:contain;padding:18px;box-sizing:border-box;filter:drop-shadow(0 14px 18px rgba(20,60,45,.14));transition:transform .45s ease}.product:hover .pic img{transform:scale(1.06) translateY(-3px)}.imageNote{font-size:10px;color:#718078;margin-top:6px}.pill{position:absolute;left:12px;top:12px;background:#e1f3e9;color:var(--brand);font-size:11px;padding:6px 9px;border-radius:99px}.pbody{padding:16px}.pbody h3{font-size:16px;margin-bottom:7px}.small{font-size:12px;color:var(--muted)}.price{display:flex;align-items:center;gap:8px;margin:13px 0}.price strong{font-size:19px}.old{text-decoration:line-through;color:#9aa7a1;font-size:13px}.add{width:100%;padding:11px;border-radius:11px;border:1px solid #b9d7c9;background:#edf8f2;color:var(--brand);font-weight:600;cursor:pointer}.add:hover{background:var(--accent)}.promo{background:#123a2c;color:white;border-radius:24px;padding:28px 34px;display:flex;justify-content:space-between;align-items:center;gap:20px}.promo p{color:#c8ddd5;margin-top:7px}.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.trust div{background:white;border:1px solid var(--line);border-radius:16px;padding:18px}.trust strong{display:block;margin-bottom:5px}.footer{background:#102a21;color:#cfe0d9;padding:42px 22px}.footerin{max-width:1240px;margin:auto;display:flex;justify-content:space-between;gap:30px}.drawer{position:fixed;right:0;top:0;width:min(430px,100%);height:100%;background:white;z-index:100;box-shadow:-20px 0 60px rgba(0,0,0,.18);transform:translateX(105%);transition:.35s;display:flex;flex-direction:column}.drawer.open{transform:none}.drawerHead{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.cartItems{padding:18px;overflow:auto;flex:1}.cartItem{display:grid;grid-template-columns:58px 1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.thumb{background:#eff6f2;border-radius:10px;display:grid;place-items:center;font-size:28px}.qty{display:flex;align-items:center;gap:8px;margin-top:7px}.qty button{border:1px solid var(--line);background:white;border-radius:7px;width:25px;height:25px}.drawerFoot{padding:20px;border-top:1px solid var(--line)}.total{display:flex;justify-content:space-between;font-size:18px;margin-bottom:14px}.modal{position:fixed;inset:0;background:rgba(7,25,18,.5);z-index:120;display:none;place-items:center;padding:20px}.modal.open{display:grid}.modalBox{background:white;border-radius:22px;max-width:560px;width:100%;padding:28px;max-height:90vh;overflow:auto}.close{border:0;background:#eef4f0;border-radius:9px;padding:8px 11px;cursor:pointer;float:right}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:#123a2c;color:white;padding:13px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.3s;z-index:200}.toast.show{opacity:1;transform:translate(-50%,0)}@keyframes float{50%{transform:translateY(-12px) rotate(1deg)}}@media(max-width:900px){.heroCard{grid-template-columns:1fr;padding:35px}.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(2,1fr)}.navin{flex-wrap:wrap}.search{order:3;flex-basis:100%}.trust{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.products{grid-template-columns:1fr 1fr;gap:10px}.pic{height:145px}.categories{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:43px}.heroCard{padding:25px}.footerin{flex-direction:column}}
+</style></head>
+<body>
+<div class="shop">
+<div class="topbar">Free delivery on eligible orders · Licensed pharmacy partners · Secure checkout</div>
+<nav class="nav"><div class="navin"><a class="gouda-logo" href="#" aria-label="Gouda's Pharma home">
+  <span class="gouda-logo-mark" aria-hidden="true"></span>
+  <span><span class="gouda-logo-word">Gouda's Pharma</span><span class="gouda-logo-sub">Health • Care • Delivered</span></span>
+</a><div class="search"><span>⌕</span><input id="search" placeholder="Search medicines, vitamins, personal care..."/></div><button class="navbtn" id="accountBtn" type="button" aria-label="Account">👤</button><button class="navbtn" id="wishlistBtn" type="button" aria-label="Wishlist">♡</button><button class="navbtn cartbtn" id="openCart" type="button" aria-label="Open cart">🛒<span class="badge" id="count">0</span></button></div><div class="cats"><a href="#medicines">Medicines</a><a href="#categories">Wellness</a><a href="#categories">Personal Care</a><a href="#categories">Baby Care</a><a href="#categories">First Aid</a><a href="#offers">Offers</a></div></nav>
+<section class="hero"><div class="heroCard"><div><div class="eyebrow">Your everyday health store</div><h1>Healthcare made simpler.</h1><p>Shop trusted health, wellness and personal-care products with a smooth, modern pharmacy experience.</p><div class="heroSearch"><input id="heroSearch" placeholder="What are you looking for?"/><button class="primary" onclick="doSearch()">Search</button></div></div><div class="heroArt"><div class="medicalOrb">🩺</div></div></div></section>
+<main class="wrap">
+<section class="section" id="categories"><div class="sectionHead"><h2>Shop by category</h2><a href="#medicines">View all</a></div><div class="categories"><div class="cat" onclick="filterCat('Medicines')"><span class="emoji">💊</span><b>Medicines</b></div><div class="cat" onclick="filterCat('Wellness')"><span class="emoji">🌿</span><b>Wellness</b></div><div class="cat" onclick="filterCat('Personal Care')"><span class="emoji">🧴</span><b>Personal Care</b></div><div class="cat" onclick="filterCat('Baby Care')"><span class="emoji">🧸</span><b>Baby Care</b></div><div class="cat" onclick="filterCat('First Aid')"><span class="emoji">🩹</span><b>First Aid</b></div><div class="cat" onclick="filterCat('Devices')"><span class="emoji">🩺</span><b>Devices</b></div></div></section>
+<section class="section" id="medicines"><div class="sectionHead"><h2>Popular products</h2><a href="#medicines">Browse store</a></div><p class="small" style="max-width:780px;margin:-8px 0 16px;line-height:1.55">Medicine information shown here is a concise product description, not medical advice. Prescription requirements, availability and formulations can vary by location. Always check the package label and consult a qualified pharmacist when needed.</p><div class="toolbar"><button class="filter" onclick="filterCat('All')">All</button><button class="filter" onclick="filterCat('Medicines')">Medicines</button><button class="filter" onclick="filterCat('Wellness')">Wellness</button><button class="filter" onclick="filterCat('Personal Care')">Personal Care</button></div><div class="products" id="products"></div></section>
+<section class="section" id="offers"><div class="promo"><div><div class="eyebrow" style="color:#aee1ca">Gouda's care club</div><h2 style="font:600 30px Fraunces,serif;margin-top:7px">Save on your everyday essentials.</h2><p>Discover selected wellness and personal-care offers.</p></div><button class="primary" onclick="document.getElementById('medicines').scrollIntoView({behavior:'smooth'})">Shop offers</button></div></section>
+<section class="section"><div class="sectionHead"><h2>Why shop with Gouda's?</h2></div><div class="trust"><div><strong>✓ Trusted products</strong><span class="small">Clear product information and transparent pricing.</span></div><div><strong>⚡ Fast experience</strong><span class="small">Quick search, cart and checkout flow.</span></div><div><strong>🔒 Secure by design</strong><span class="small">Authentication and backend-ready architecture.</span></div><div><strong>📦 Order tracking</strong><span class="small">Connect orders to the Gouda's backend.</span></div></div></section>
+</main>
+<footer class="footer"><div style="max-width:1240px;margin:0 auto 18px;font-size:11px;color:#9bb5aa;line-height:1.6">Product imagery uses reference photographs from Wikimedia Commons and other image sources. Images are illustrative and may not represent the exact stocked package or device model.</div><div class="footerin"><div><div class="logo">Gouda's <span>Pharma</span></div><p style="margin-top:8px;color:#9fb6ad">A modern medical e-commerce experience.</p></div><div>Medicines · Wellness · Personal Care · First Aid</div></div></footer>
+</div>
+<aside class="drawer" id="drawer"><div class="drawerHead"><h2 style="font:600 27px Fraunces,serif">Your cart</h2><button class="close" onclick="closeCart()">✕</button></div><div class="cartItems" id="cartItems"></div><div class="drawerFoot"><div class="total"><span>Total</span><strong id="total">₹0</strong></div><button class="primary" style="width:100%" onclick="checkout()">Continue to checkout</button></div></aside>
+<div class="modal" id="modal"><div class="modalBox"><button class="close" onclick="closeModal()">✕</button><h2 style="font:600 30px Fraunces,serif;margin-bottom:12px">Product details</h2><div id="modalContent"></div></div></div><div class="toast" id="toast"></div>
+<script>
+const products=[
+{id:1,name:'Paracetamol 500 mg Tablets',cat:'Medicines',price:35,old:45,emoji:'💊',brand:'GoudaCare',logo:'✚',desc:'Paracetamol 500 mg tablets for temporary relief of mild-to-moderate pain and fever.',details:'Active ingredient: paracetamol 500 mg per tablet. Follow the package label and pharmacist guidance. Do not exceed the labeled dose or combine with other paracetamol-containing products unless a healthcare professional advises you.',form:'Tablets',rx:false},
+{id:2,name:'Cetirizine 10 mg Tablets',cat:'Medicines',price:28,old:35,emoji:'💊',brand:'GoudaCare',logo:'C',desc:'Cetirizine 10 mg antihistamine tablets for common allergy symptoms.',details:'Active ingredient: cetirizine hydrochloride 10 mg per tablet. May cause drowsiness in some people. Follow the package directions and ask a pharmacist if you take other medicines.',form:'Tablets',rx:false},
+{id:3,name:'Digital Thermometer',cat:'Devices',price:249,old:299,emoji:'🌡️',brand:'Gouda Health Devices',logo:'G',desc:'Digital thermometer designed for quick routine temperature checks at home.',details:'Electronic temperature-monitoring device with a digital display. Use and clean according to the manufacturer instructions. The actual supplied model may vary from the reference image.',form:'Medical device',rx:false},
+{id:4,name:'Automatic Blood Pressure Monitor',cat:'Devices',price:1299,old:1599,emoji:'🩺',brand:'Gouda Health Devices',logo:'BP',desc:'Upper-arm automatic blood-pressure monitor for routine home measurements.',details:'Home monitoring device for blood pressure and pulse. Use the correct cuff size and follow the manufacturer instructions. A single reading should not be used to diagnose a condition.',form:'Medical device',rx:false},
+{id:5,name:'Pulse Oximeter',cat:'Devices',price:699,old:899,emoji:'❤️',brand:'Gouda Health Devices',logo:'O₂',desc:'Compact fingertip pulse oximeter for spot oxygen-saturation and pulse-rate readings.',details:'Portable device for spot measurements. Movement, cold fingers, nail products and other factors can affect readings. Follow the device instructions and seek professional advice for concerning symptoms.',form:'Medical device',rx:false},
+{id:6,name:'Rechargeable Electric Toothbrush',cat:'Personal Care',price:899,old:1199,emoji:'🪥',brand:'Gouda Personal Care',logo:'G',desc:'Rechargeable electric toothbrush for everyday oral-care routines.',details:'Personal-care device intended for routine tooth cleaning. Follow the charging, cleaning and brush-head replacement instructions supplied with the product.',form:'Personal care device',rx:false},
+{id:7,name:'Antiseptic First Aid Solution',cat:'First Aid',price:129,old:159,emoji:'🩹',brand:'GoudaCare',logo:'+',desc:'Topical antiseptic product for everyday first-aid care as directed on the label.',details:'For external use only. Follow the product label and avoid contact with eyes. For deep, serious or infected wounds, seek appropriate medical care.',form:'Topical solution',rx:false},
+{id:8,name:'Vitamin C 500 mg Tablets',cat:'Wellness',price:179,old:219,emoji:'🍊',brand:'Gouda Wellness',logo:'C',desc:'Vitamin C 500 mg supplement for adults who choose to add vitamin C to their diet.',details:'Contains vitamin C (ascorbic acid) 500 mg per tablet. Supplements do not replace a varied, balanced diet. Follow package directions and ask a healthcare professional if you have questions.',form:'Tablets',rx:false},
+{id:9,name:'Baby Gentle Wash',cat:'Baby Care',price:299,old:349,emoji:'🧸',brand:'Gouda Baby',logo:'B',desc:'Gentle cleansing wash for everyday baby personal-care routines.',details:'For external use. Check the ingredient list for known sensitivities, avoid the eyes and discontinue use if irritation occurs.',form:'Liquid cleanser',rx:false},
+{id:10,name:'Alcohol Hand Sanitizer 70%',cat:'Personal Care',price:99,old:129,emoji:'🧼',brand:'Gouda Personal Care',logo:'70',desc:'70% alcohol hand sanitizer for convenient hand hygiene when soap and water are not readily available.',details:'For external use only. Keep away from eyes, flames and heat. Allow hands to dry completely and follow the product label.',form:'Hand sanitizer',rx:false}
+];
+let cart=JSON.parse(localStorage.getItem('goudaCart')||'[]');let active='All';
+const money=n=>'₹'+n.toLocaleString('en-IN');
+function renderProducts(){let q=(document.getElementById('search').value||'').toLowerCase();let list=products.filter(p=>(active==='All'||p.cat===active)&&(!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));document.getElementById('products').innerHTML=list.map((p,i)=>`<article class="product visible" style="transition-delay:${i*45}ms"><div class="pic" onclick="showProduct(${p.id})" style="cursor:pointer"><span class="pill">${p.cat}</span><span style="font-size:70px">${p.emoji}</span></div><div class="pbody"><div class="catalog-brand"><span class="catalog-brand-logo">${p.logo}</span>${p.brand}</div><h3>${p.name}</h3><div class="catalog-form">${p.form}</div><div class="small">${p.desc}</div><div class="catalog-safety">Product information only. Follow the package label and pharmacist/clinician advice where appropriate.</div><div class="price"><strong>${money(p.price)}</strong><span class="old">${money(p.old)}</span></div><button class="add" onclick="add(${p.id})">Add to cart</button><button class="add" style="margin-top:7px;background:white" onclick="showProduct(${p.id})">View details</button></div></article>`).join('')||'<p>No products found.</p>');
+function filterCat(c){active=c;renderProducts();document.getElementById('medicines').scrollIntoView({behavior:'smooth'})};function doSearch(){document.getElementById('search').value=document.getElementById('heroSearch').value;renderProducts();document.getElementById('medicines').scrollIntoView({behavior:'smooth'})};document.getElementById('search').addEventListener('input',renderProducts);
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)};function checkout(){if(!cart.length)return toast('Your cart is empty');document.getElementById('modalContent').innerHTML='<p style="color:#64736d;line-height:1.6">Checkout is ready to connect to the Gouda’s backend. Your cart items are preserved locally for this demo.</p><br><button class="primary" onclick="toast(\'Backend checkout endpoint ready to connect\');closeModal()">Place order</button>';document.getElementById('modal').classList.add('open')};function closeModal(){document.getElementById('modal').classList.remove('open')};
+renderProducts();save();
+</script>
+
+<!-- Gouda's Pharma 3D visualization layer -->
+<style>
+  #pharma3d {
+    position: relative; width: 100%; height: 430px; overflow: hidden;
+    border-radius: 28px; background: radial-gradient(circle at 50% 35%, #eafff4 0, #d7f3e5 32%, #b8ddcc 70%, #8ebca6 100%);
+    box-shadow: 0 24px 70px rgba(16,72,48,.18); isolation:isolate;
+  }
+  #pharma3d canvas { display:block; width:100%; height:100%; }
+  .pharma3d-label {
+    position:absolute; left:22px; bottom:18px; z-index:3; padding:10px 14px;
+    border-radius:999px; background:rgba(255,255,255,.72); backdrop-filter:blur(12px);
+    color:#123b2b; font:600 13px/1.2 system-ui,sans-serif; box-shadow:0 8px 28px rgba(0,0,0,.08);
+  }
+</style>
+<div id="pharma3d" aria-label="Interactive 3D pharmacy showcase">
+  <div class="pharma3d-label">Interactive 3D pharmacy • drag to rotate</div>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
+const root = document.getElementById('pharma3d');
+if (root) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xe8fff2);
+
+  const camera = new THREE.PerspectiveCamera(34, root.clientWidth / root.clientHeight, 0.1, 100);
+  camera.position.set(5.8, 4.2, 7.8);
+
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(root.clientWidth, root.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  root.appendChild(renderer.domElement);
+
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x7fae97, 2.2);
+  scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xffffff, 3.4);
+  key.position.set(4, 8, 6); key.castShadow = true;
+  scene.add(key);
+
+  const floor = new THREE.Mesh(
+    new THREE.CylinderGeometry(5.4, 5.4, .25, 64),
+    new THREE.MeshStandardMaterial({color:0xffffff, roughness:.72})
+  );
+  floor.position.y = -1.55; floor.receiveShadow = true; scene.add(floor);
+
+  const group = new THREE.Group(); scene.add(group);
+
+  function roundedBox(w,h,d,color, x,y,z) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), new THREE.MeshStandardMaterial({color, roughness:.38, metalness:.02}));
+    m.position.set(x,y,z); m.castShadow=true; m.receiveShadow=true; group.add(m); return m;
+  }
+  function bottle(x,z,color,labelColor) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,1.35,32), new THREE.MeshStandardMaterial({color,roughness:.25}));
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(.27,.27,.28,24), new THREE.MeshStandardMaterial({color:0x244d3b,roughness:.3}));
+    body.position.y=.15; cap.position.y=.95; g.add(body,cap);
+    const label = new THREE.Mesh(new THREE.BoxGeometry(.62,.48,.018), new THREE.MeshStandardMaterial({color:labelColor,roughness:.5}));
+    label.position.set(0,.12,.49); g.add(label);
+    g.position.set(x, -.55, z); g.castShadow=true; group.add(g);
+  }
+
+  // Product display plinth
+  roundedBox(5.5,.55,3.5,0xf8fffb,0,-1.05,0);
+  roundedBox(4.9,1.9,.45,0xffffff,0,.05,-1.25);
+  roundedBox(4.9,1.9,.45,0xffffff,0,.05,1.25);
+
+  // Medicine / wellness products
+  bottle(-2.0, .2, 0xffffff, 0x77d5a7);
+  bottle(-.7, .2, 0xf4f4f4, 0x9ee8c0);
+  bottle(.7, .2, 0xffffff, 0x77d5a7);
+  bottle(2.0, .2, 0xf0f4f2, 0x9ee8c0);
+
+  // Floating medical cross
+  const cross = new THREE.Group();
+  const cm = new THREE.MeshStandardMaterial({color:0x2aa86d,roughness:.3});
+  const c1 = new THREE.Mesh(new THREE.BoxGeometry(.38,1.35,.18),cm);
+  const c2 = new THREE.Mesh(new THREE.BoxGeometry(1.35,.38,.18),cm);
+  cross.add(c1,c2); cross.position.set(0,2.1,0); cross.castShadow=true; group.add(cross);
+
+  // Orbiting wellness spheres
+  const orbGroup = new THREE.Group(); group.add(orbGroup);
+  for (let i=0;i<9;i++) {
+    const a=i/9*Math.PI*2, r=3.5;
+    const orb=new THREE.Mesh(new THREE.SphereGeometry(.08+(i%3)*.025,16,16),
+      new THREE.MeshStandardMaterial({color: i%2 ? 0x67c99a : 0xffffff, roughness:.2}));
+    orb.position.set(Math.cos(a)*r, .2+Math.sin(a*2)*.35, Math.sin(a)*r);
+    orbGroup.add(orb);
+  }
+
+  let targetX=0, targetY=0, rotX=.05, rotY=-.25;
+  let dragging=false, px=0, py=0;
+  root.addEventListener('pointerdown', e=>{dragging=true;px=e.clientX;py=e.clientY;root.setPointerCapture(e.pointerId)});
+  root.addEventListener('pointermove', e=>{
+    if(!dragging)return;
+    targetY += (e.clientX-px)*.008; targetX += (e.clientY-py)*.006; px=e.clientX;py=e.clientY;
+  });
+  root.addEventListener('pointerup',()=>dragging=false);
+  root.addEventListener('pointerleave',()=>dragging=false);
+
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t=clock.getElapsedTime();
+    if(!dragging) targetY += .0025;
+    rotY += (targetY-rotY)*.045; rotX += (targetX-rotX)*.045;
+    group.rotation.y=rotY; group.rotation.x=Math.max(-.35,Math.min(.35,rotX));
+    cross.position.y=2.1+Math.sin(t*1.5)*.12;
+    orbGroup.rotation.y=t*.16;
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  const resize=()=>{camera.aspect=root.clientWidth/root.clientHeight;camera.updateProjectionMatrix();renderer.setSize(root.clientWidth,root.clientHeight)};
+  addEventListener('resize',resize);
+}
+</script>
+
+
+<!-- Supabase connection: public publishable key only -->
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://jbczrdapllbdtyjdwgsf.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_V3CROIC3ToS6wseHUIOzvA_TxOIAZmX';
+
+window.goudaSupabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+window.GoudaAPI = {
+  client: window.goudaSupabase,
+
+  async getProducts(category = null, search = '') {
+    let q = this.client.from('products').select('*').eq('active', true).order('created_at', {ascending:false});
+    if (category && category !== 'All') q = q.eq('category', category);
+    if (search) q = q.or(`name.ilike.%${search}%,brand.ilike.%${search}%,description.ilike.%${search}%`);
+    const {data, error} = await q;
+    if (error) throw error;
+    return data || [];
+  },
+
+  async signUp(email, password, fullName = '') {
+    const {data, error} = await this.client.auth.signUp({
+      email, password,
+      options: { data: { full_name: fullName } }
+    });
+    if (error) throw error;
+    return data;
+  },
+
+  async signIn(email, password) {
+    const {data, error} = await this.client.auth.signInWithPassword({email, password});
+    if (error) throw error;
+    return data;
+  },
+
+  async signOut() {
+    const {error} = await this.client.auth.signOut();
+    if (error) throw error;
+  },
+
+  async getCart() {
+    const {data:{user}} = await this.client.auth.getUser();
+    if (!user) return [];
+    const {data, error} = await this.client.from('carts').select('id, cart_items(id, quantity, product_id, products(*))').eq('user_id', user.id).maybeSingle();
+    if (error) throw error;
+    return data?.cart_items || [];
+  },
+
+  async ensureCart() {
+    const {data:{user}} = await this.client.auth.getUser();
+    if (!user) throw new Error('Please sign in before saving your cart.');
+    const {data, error} = await this.client.from('carts').upsert({user_id:user.id}, {onConflict:'user_id'}).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async addToCart(productId, quantity=1) {
+    const cart = await this.ensureCart();
+    const {data:existing} = await this.client.from('cart_items').select('id, quantity').eq('cart_id', cart.id).eq('product_id', productId).maybeSingle();
+    const next = (existing?.quantity || 0) + quantity;
+    const payload = {cart_id:cart.id, product_id:productId, quantity:next};
+    const {data, error} = await this.client.from('cart_items').upsert(payload, {onConflict:'cart_id,product_id'}).select().single();
+    if (error) throw error;
+    return data;
+  },
+
+  async createOrder(items, shipping={}) {
+    const {data:{user}} = await this.client.auth.getUser();
+    if (!user) throw new Error('Please sign in before placing an order.');
+    if (!items?.length) throw new Error('Your cart is empty.');
+    const total = items.reduce((sum,i)=>sum + Number(i.price)*Number(i.quantity), 0);
+    const {data:order,error:orderError} = await this.client.from('orders').insert({
+      user_id:user.id,total,
+      shipping_name:shipping.name || '',
+      shipping_phone:shipping.phone || '',
+      shipping_address:shipping.address || ''
+    }).select().single();
+    if (orderError) throw orderError;
+
+    const rows = items.map(i=>({
+      order_id:order.id, product_id:i.id,
+      product_name:i.name, unit_price:Number(i.price), quantity:Number(i.quantity)
+    }));
+    const {error:itemError} = await this.client.from('order_items').insert(rows);
+    if (itemError) throw itemError;
+    return order;
+  }
+};
+
+window.dispatchEvent(new CustomEvent('gouda:supabase-ready'));
+</script>
+
+
+<script>
+window.addEventListener('gouda:supabase-ready', async () => {
+  const el = document.createElement('div');
+  el.id='supabaseStatus';
+  el.innerHTML='<span class="dot"></span>Supabase connected';
+  document.body.appendChild(el);
+  try {
+    const { error } = await window.GoudaAPI.client.from('products').select('id', {count:'exact',head:true});
+    if (error) throw error;
+  } catch(e) {
+    el.innerHTML='<span class="dot" style="background:#d98282"></span>Backend unavailable';
+    el.title=e.message || 'Could not reach Supabase';
+  }
+});
+</script>
+
+
+<script type="module">
+window.addEventListener('gouda:supabase-ready', async () => {
+  // If the page already defines a product renderer, replace its catalog with live rows.
+  // Existing local fallback remains available if the network is unavailable.
+  try {
+    const rows = await window.GoudaAPI.getProducts();
+    if (!rows.length) return;
+    window.goudaLiveProducts = rows;
+    window.dispatchEvent(new CustomEvent('gouda:products-loaded', {detail: rows}));
+  } catch (e) {
+    console.warn('Gouda live catalog fallback:', e.message);
+  }
+});
+</script>
+
+
+<style>
+#goudaAccountPanel{position:fixed;top:82px;right:20px;z-index:250;width:min(360px,calc(100vw - 40px));
+background:#fff;color:#16362a;border:1px solid #dcebe4;border-radius:18px;padding:20px;
+box-shadow:0 22px 70px rgba(8,35,24,.2);display:none}
+#goudaAccountPanel.open{display:block}
+#goudaAccountPanel input{width:100%;padding:11px 12px;margin:6px 0;border:1px solid #d6e6df;border-radius:10px}
+#goudaAccountPanel .row{display:flex;gap:8px;margin-top:8px}
+#goudaAccountPanel button{flex:1;padding:10px;border:0;border-radius:10px;cursor:pointer}
+.gouda-live-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:#276247;margin:7px 0}
+.gouda-live-badge i{width:7px;height:7px;border-radius:50%;background:#31b978}
+.product .add:disabled{opacity:.5;cursor:not-allowed}
+</style>
+<div id="goudaAccountPanel" aria-live="polite">
+  <button class="close" id="accountClose" type="button">✕</button>
+  <h3 style="font:600 24px Fraunces,serif;margin-bottom:6px">Your account</h3>
+  <p id="accountState" class="small">Sign in to save your cart and place orders.</p>
+  <div id="authFields">
+    <input id="authName" placeholder="Full name (for sign up)">
+    <input id="authEmail" type="email" placeholder="Email">
+    <input id="authPassword" type="password" placeholder="Password">
+    <div class="row"><button class="primary" id="signInBtn" type="button">Sign in</button><button id="signUpBtn" type="button">Create account</button></div>
+  </div>
+  <button id="signOutBtn" type="button" style="display:none;width:100%;margin-top:8px;background:#eef5f1">Sign out</button>
+</div>
+
+<script type="module">
+const sb = window.goudaSupabase;
+let liveProducts = [];
+let activeCategory = 'All';
+let cartState = JSON.parse(localStorage.getItem('goudaCart') || '[]');
+
+const $ = id => document.getElementById(id);
+const money = n => '₹' + Number(n || 0).toLocaleString('en-IN');
+
+function notify(message){
+  const e=$('toast'); if(!e) return;
+  e.textContent=message; e.classList.add('show');
+  clearTimeout(window.__gToast); window.__gToast=setTimeout(()=>e.classList.remove('show'),2200);
+}
+
+function normalizeProduct(p){
+  return {
+    id:p.id, name:p.name, cat:p.category, price:Number(p.price||0), old:Number(p.old_price||p.price||0),
+    brand:p.brand||"Gouda's Pharma", logo:p.logo||'G', desc:p.description||'Health and personal-care product.',
+    details:p.details||p.description||'Please check the supplied package for complete product information.',
+    form:p.form||'', emoji:p.category==='Devices'?'🩺':p.category==='Personal Care'?'🧴':'💊',
+    image:p.image_url||''
+  };
+}
+
+async function loadProducts(){
+  const cached = localStorage.getItem('goudaProductsCache');
+  if(cached){
+    try{
+      liveProducts=JSON.parse(cached);
+      renderProducts();
+    }catch(_){}
+  }
+  try{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),5000);
+    const {data,error}=await sb.from('products').select('*').eq('active',true).order('created_at',{ascending:false});
+    clearTimeout(timer);
+    if(error) throw error;
+    liveProducts=(data||[]).map(normalizeProduct);
+    localStorage.setItem('goudaProductsCache',JSON.stringify(liveProducts));
+    renderProducts();
+  }catch(err){
+    console.warn('Live catalog delayed:',err.message||err);
+    if(!liveProducts.length) notify('Using saved catalog while backend reconnects.');
+  }
+}
+
+function filteredProducts(){
+  const q=($('search')?.value||'').trim().toLowerCase();
+  return liveProducts.filter(p =>
+    (activeCategory==='All'||p.cat===activeCategory) &&
+    (!q || `${p.name} ${p.cat} ${p.brand} ${p.desc}`.toLowerCase().includes(q))
+  );
+}
+
+function renderProducts(){
+  const box=$('products'); if(!box) return;
+  const list=filteredProducts();
+  box.innerHTML=list.map((p,i)=>`
+    <article class="product visible" style="transition-delay:${i*35}ms">
+      <div class="pic" data-product="${p.id}" style="cursor:pointer" role="button" tabindex="0" aria-label="View ${p.name}">
+        <span class="pill">${p.cat}</span>
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:18px;box-sizing:border-box" onerror="this.remove()">` : `<span style="font-size:70px">${p.emoji}</span>`}
+      </div>
+      <div class="pbody">
+        <div class="catalog-brand"><span class="catalog-brand-logo">${p.logo}</span>${p.brand}</div>
+        <h3>${p.name}</h3>
+        <div class="catalog-form">${p.form}</div>
+        <div class="small">${p.desc}</div>
+        <div class="price"><strong>${money(p.price)}</strong>${p.old>p.price?`<span class="old">${money(p.old)}</span>`:''}</div>
+        <button class="add" data-add="${p.id}" type="button">Add to cart</button>
+        <button class="add" style="margin-top:7px;background:white" data-view="${p.id}" type="button">View details</button>
+      </div>
+    </article>`).join('') || '<p class="small">No products match your search.</p>';
+}
+
+function showProduct(id){
+  const p=liveProducts.find(x=>x.id===id); if(!p) return;
+  $('modalContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="catalog-brand-logo" style="width:42px;height:42px">${p.logo}</div>
+      <div><strong>${p.brand}</strong><div class="catalog-form">${p.form}</div></div>
+    </div>
+    <div style="font-size:64px;margin-bottom:8px">${p.emoji}</div>
+    <h2>${p.name}</h2>
+    <p style="line-height:1.7;color:#50635a;margin-top:8px">${p.details}</p>
+    <p class="catalog-safety" style="margin-top:12px">Product information only — not a diagnosis or personalized medical advice. Check the exact package label and consult a qualified pharmacist or clinician when appropriate.</p>
+    <button class="primary" style="width:100%;margin-top:14px" data-modal-add="${p.id}" type="button">Add to cart · ${money(p.price)}</button>`;
+  $('modal').classList.add('open');
+}
+
+function saveLocal(){localStorage.setItem('goudaCart',JSON.stringify(cartState)); renderCart();}
+
+function renderCart(){
+  const box=$('cartItems'); if(!box) return;
+  let total=0, count=0;
+  box.innerHTML=cartState.map((item,i)=>{
+    const p=liveProducts.find(x=>x.id===item.id) || item;
+    total += Number(p.price)*item.quantity; count += item.quantity;
+    return `<div class="cartItem">
+      <div class="thumb">${p.emoji||'💊'}</div>
+      <div><strong>${p.name}</strong><div class="small">${money(p.price)} each</div>
+      <div class="qty"><button type="button" data-dec="${p.id}">−</button><span>${item.quantity}</span><button type="button" data-inc="${p.id}">+</button></div></div>
+      <strong>${money(Number(p.price)*item.quantity)}</strong>
+    </div>`;
+  }).join('') || '<p class="small" style="padding:20px">Your cart is empty.</p>';
+  $('total').textContent=money(total);
+  $('count').textContent=count;
+}
+
+async function addToCart(id){
+  const p=liveProducts.find(x=>x.id===id); if(!p) return;
+  const existing=cartState.find(x=>x.id===id);
+  if(existing) existing.quantity++; else cartState.push({id:p.id,name:p.name,price:p.price,quantity:1});
+  saveLocal();
+  notify(`${p.name} added to cart`);
+  // Backend sync happens after the UI updates, so the button never waits for the network.
+  (async()=>{
+    try{
+      const {data:{user}}=await sb.auth.getUser();
+      if(!user) return;
+      const {data:cart,error:cartError}=await sb.from('carts').upsert({user_id:user.id},{onConflict:'user_id'}).select().single();
+      if(cartError) throw cartError;
+      const current=await sb.from('cart_items').select('id,quantity').eq('cart_id',cart.id).eq('product_id',id).maybeSingle();
+      if(current.error) throw current.error;
+      const quantity=(current.data?.quantity||0)+1;
+      await sb.from('cart_items').upsert({cart_id:cart.id,product_id:id,quantity},{onConflict:'cart_id,product_id'});
+    }catch(err){ console.warn('Background cart sync:',err.message||err); }
+  })();
+}
+
+async function syncCartFromBackend(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user) return;
+  const {data:cart}=await sb.from('carts').select('id,cart_items(quantity,product_id,products(name,price))').eq('user_id',user.id).maybeSingle();
+  if(!cart?.cart_items) return;
+  cartState=cart.cart_items.map(x=>({id:x.product_id,name:x.products?.name||'Product',price:Number(x.products?.price||0),quantity:x.quantity}));
+  saveLocal();
+}
+
+async function checkoutLive(){
+  if(!cartState.length) return notify('Your cart is empty');
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){
+    $('goudaAccountPanel').classList.add('open');
+    return notify('Please sign in before checkout');
+  }
+  const total=cartState.reduce((s,i)=>s+Number(i.price)*i.quantity,0);
+  const {data:order,error}=await sb.from('orders').insert({user_id:user.id,total,status:'pending'}).select().single();
+  if(error) return notify(error.message);
+  const rows=cartState.map(i=>({order_id:order.id,product_id:i.id,product_name:i.name,unit_price:Number(i.price),quantity:i.quantity}));
+  const {error:itemError}=await sb.from('order_items').insert(rows);
+  if(itemError) return notify(itemError.message);
+  await sb.from('cart_items').delete().eq('cart_id',(await sb.from('carts').select('id').eq('user_id',user.id).single()).data.id);
+  cartState=[]; saveLocal(); closeModal(); closeCart();
+  notify(`Order ${order.id.slice(0,8)} created successfully`);
+}
+
+function openAccount(){ $('goudaAccountPanel').classList.toggle('open'); }
+async function updateAuthUI(){
+  const {data:{user}}=await sb.auth.getUser();
+  $('accountState').textContent=user ? `Signed in as ${user.email}` : 'Sign in to save your cart and place orders.';
+  $('authFields').style.display=user?'none':'block';
+  $('signOutBtn').style.display=user?'block':'none';
+  if(user) syncCartFromBackend().catch(e=>console.warn('Cart sync:',e));
+}
+
+window.filterCat=(c)=>{activeCategory=c;renderProducts();$('medicines')?.scrollIntoView({behavior:'smooth'})};
+window.doSearch=()=>{if($('heroSearch')&&$('search')) $('search').value=$('heroSearch').value;renderProducts();$('medicines')?.scrollIntoView({behavior:'smooth'})};
+window.showProduct=showProduct;
+window.add=(id)=>addToCart(id);
+window.checkout=checkoutLive;
+
+document.addEventListener('click',e=>{
+  const add=e.target.closest('[data-add]'); if(add) return addToCart(add.dataset.add);
+  const view=e.target.closest('[data-view]'); if(view) return showProduct(view.dataset.view);
+  const madd=e.target.closest('[data-modal-add]'); if(madd) return addToCart(madd.dataset.modalAdd);
+  const inc=e.target.closest('[data-inc]'); if(inc){const x=cartState.find(i=>i.id===inc.dataset.inc);if(x)x.quantity++;return saveLocal();}
+  const dec=e.target.closest('[data-dec]'); if(dec){const x=cartState.find(i=>i.id===dec.dataset.dec);if(x)x.quantity--;cartState=cartState.filter(i=>i.quantity>0);return saveLocal();}
+  const pic=e.target.closest('[data-product]'); if(pic) showProduct(pic.dataset.product);
+});
+
+$('openCart')?.addEventListener('click',()=>document.getElementById('drawer')?.classList.add('open'));
+$('accountBtn')?.addEventListener('click',openAccount);
+$('accountClose')?.addEventListener('click',()=>$('goudaAccountPanel').classList.remove('open'));
+$('signInBtn')?.addEventListener('click',async()=>{
+  try{await sb.auth.signInWithPassword({email:$('authEmail').value.trim(),password:$('authPassword').value});await updateAuthUI();$('goudaAccountPanel').classList.remove('open');notify('Signed in successfully');}
+  catch(e){notify(e.message);}
+});
+$('signUpBtn')?.addEventListener('click',async()=>{
+  try{await sb.auth.signUp({email:$('authEmail').value.trim(),password:$('authPassword').value,options:{data:{full_name:$('authName').value.trim()}}});notify('Account created. Check your email if confirmation is enabled.');}
+  catch(e){notify(e.message);}
+});
+$('signOutBtn')?.addEventListener('click',async()=>{await sb.auth.signOut();cartState=[];saveLocal();await updateAuthUI();notify('Signed out');});
+$('wishlistBtn')?.addEventListener('click',()=>notify('Wishlist is ready for the next backend table.'));
+$('search')?.addEventListener('input',renderProducts);
+
+sb.auth.onAuthStateChange(()=>updateAuthUI());
+await loadProducts();
+renderCart();
+await updateAuthUI();
+</script>
+
+
+<style id="gouda-close-fix">
+#modal .close,#drawer .close,#goudaAccountPanel .close{
+  cursor:pointer!important;pointer-events:auto!important;position:relative;z-index:20;
+}
+#modal,#drawer{cursor:default}
+</style>
+<script>
+(function(){
+  function closeEl(id){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.classList.remove('open');
+    el.style.display='';
+    el.setAttribute('aria-hidden','true');
+  }
+  window.closeModal=function(){closeEl('modal')};
+  window.closeCart=function(){closeEl('drawer')};
+
+  document.addEventListener('click',function(e){
+    const modal=e.target.closest('#modal');
+    if(modal && (e.target===modal || e.target.closest('#modal .close'))) closeEl('modal');
+
+    const drawer=e.target.closest('#drawer');
+    if(drawer && (e.target===drawer || e.target.closest('#drawer .close'))) closeEl('drawer');
+
+    const account=e.target.closest('#goudaAccountPanel');
+    if(account && e.target.closest('.close')) closeEl('goudaAccountPanel');
+  },true);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape') return;
+    closeEl('modal'); closeEl('drawer'); closeEl('goudaAccountPanel');
+  });
+
+  // Fix common close buttons that only relied on an old inline handler.
+  document.querySelectorAll('#modal .close').forEach(b=>b.addEventListener('click',()=>closeEl('modal')));
+  document.querySelectorAll('#drawer .close').forEach(b=>b.addEventListener('click',()=>closeEl('drawer')));
+})();
+</script>
+
+</body></html>
